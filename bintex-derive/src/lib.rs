@@ -45,26 +45,34 @@ impl BinTexReceiver {
 
         let mut bitfields = String::new();
         let bit_width = self.bit_width.as_ref().unwrap().0.base10_parse::<u8>()?;
+        bitfields.push_str("\\begin{figure}\n");
         bitfields.push_str(&format!("\\begin{{bytefield}}{{{}}}\n", bit_width));
-        bitfields.push_str("\\bitheader{0, 7} \\\\\n");
+        bitfields.push_str(&format!("\\bitheader{{0-{}}} \\\\\n", bit_width - 1));
 
         let mut total_bits = 0;
         for field in fields {
-            let ident = field.ident.as_ref();
+            let ident = field
+                .ident
+                .as_ref()
+                .unwrap()
+                .to_string()
+                .replace("_", "\\_");
             let bits = field.bits.as_ref().unwrap().0.base10_parse::<u8>()?;
-            bitfields.push_str(&format!("\\bitbox{{{}}}{{{}}}", bits, ident.unwrap()));
+            bitfields.push_str(&format!("\\bitbox{{{}}}{{{}}}", bits, ident));
             total_bits += bits;
-            if (total_bits % 8) == 0 {
+            if (total_bits % bit_width) == 0 {
                 bitfields.push_str(" \\\\\n");
             } else {
                 bitfields.push_str(" & ");
             }
         }
 
-        bitfields.push_str("\\end{bytefield}");
+        bitfields.push_str("\\end{bytefield}\n");
+        bitfields.push_str(&format!("\\caption{{{}}}\n", ident.to_string()));
+        bitfields.push_str("\\end{figure}");
 
         Ok(quote! {impl BinTexOutput for #ident {
-            fn latex_output(&self) -> String {
+            fn latex_output() -> String {
                 #bitfields.to_string()
             }
         }})
