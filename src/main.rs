@@ -1,7 +1,7 @@
 use bintex::{BinTex, BinTexOutput};
+use deku::prelude::*;
 use std::fs::File;
 use std::io::prelude::*;
-use deku::prelude::*;
 
 fn main() {
     #[derive(BinTex, DekuRead, DekuWrite)]
