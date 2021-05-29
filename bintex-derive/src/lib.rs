@@ -4,7 +4,7 @@ use darling::{ast, FromDeriveInput, FromField, FromMeta, FromVariant, ToTokens};
 use proc_macro2::TokenStream;
 use quote::quote;
 
-#[proc_macro_derive(BinTex, attributes(bintex))]
+#[proc_macro_derive(BinTex, attributes(bintex, deku))]
 pub fn proc_bintex(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
     let input: syn::DeriveInput = syn::parse_macro_input!(input);
 
@@ -80,7 +80,7 @@ impl BinTexReceiver {
 }
 
 #[derive(Debug, FromVariant)]
-#[darling(attributes(bintex))]
+#[darling(attributes(deku))]
 struct BinTexVariantReceiver {
     ident: syn::Ident,
     fields: ast::Fields<BinTexFieldReceiver>,
@@ -89,7 +89,7 @@ struct BinTexVariantReceiver {
 
 /// Receiver for the field-level attributes inside a struct/enum variant
 #[derive(Debug, FromField)]
-#[darling(attributes(bintex))]
+#[darling(attributes(deku))]
 struct BinTexFieldReceiver {
     ident: Option<syn::Ident>,
     ty: syn::Type,

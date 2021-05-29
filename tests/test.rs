@@ -6,11 +6,11 @@ fn it_works() {
     #[derive(BinTex)]
     #[bintex(bit_width = "8")]
     struct Testing {
-        #[bintex(bits = "4")]
+        #[deku(bits = "4")]
         a: u8,
-        #[bintex(bits = "4")]
+        #[deku(bits = "4")]
         b: u8,
-        #[bintex(bits = "8")]
+        #[deku(bits = "8")]
         c: u8,
     }
 
