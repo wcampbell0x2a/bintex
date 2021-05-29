@@ -1,6 +1,6 @@
 # bintex
 
-(Work in Progress) Create latex bytefield diagram with the use of rust proc-macros.
+(Work in Progress) Create latex [bytefield](https://www.ctan.org/pkg/bytefield) diagram with the use of rust proc-macros.
 
 # Example
 
