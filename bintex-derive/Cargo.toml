@@ -1,0 +1,16 @@
+[package]
+name = "bintex_derive"
+version = "0.1.0"
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+proc-macro = true
+
+[dependencies]
+deku = "0.12"
+syn = "1.0"
+darling = "0.13"
+proc-macro2 = "1.0"
+quote = "1.0"
