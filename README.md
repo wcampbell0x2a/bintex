@@ -22,15 +22,10 @@ struct Ipv6 {
     ecn: u8,
     #[deku(bits = "20")]
     label: u32,
-    #[deku(bits = "16")]
     length: u16,
-    #[deku(bits = "8")]
     next_header: u8,
-    #[deku(bits = "8")]
     hop_limit: u8,
-    #[deku(bits = "32")]
     src: u32,
-    #[deku(bits = "32")]
     dst: u32,
 }
 ```
