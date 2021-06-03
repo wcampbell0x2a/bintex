@@ -1,5 +1,3 @@
-extern crate proc_macro;
-
 use darling::{ast, FromDeriveInput, FromField, FromMeta, FromVariant, ToTokens};
 use proc_macro2::TokenStream;
 use quote::quote;
