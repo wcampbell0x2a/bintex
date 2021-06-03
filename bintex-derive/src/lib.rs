@@ -1,7 +1,6 @@
 use darling::{ast, FromDeriveInput, FromField, FromMeta, FromVariant, ToTokens};
 use proc_macro2::TokenStream;
 use quote::quote;
-
 #[proc_macro_derive(BinTex, attributes(bintex, deku))]
 pub fn proc_bintex(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
     let input: syn::DeriveInput = syn::parse_macro_input!(input);
@@ -41,13 +40,24 @@ impl BinTexReceiver {
 
         let fields = self.data.as_ref().take_struct().unwrap();
 
-        let mut bitfields = String::new();
-        let bit_width = self.bit_width.as_ref().unwrap().0.base10_parse::<u8>()?;
-        bitfields.push_str("\\begin{figure}\n");
-        bitfields.push_str(&format!("\\begin{{bytefield}}{{{}}}\n", bit_width));
-        bitfields.push_str(&format!("\\bitheader{{0-{}}} \\\\\n", bit_width - 1));
+        // preamble
+        let bit_width = self
+            .bit_width
+            .as_ref()
+            .expect("required bit_width attribute not found")
+            .0
+            .base10_parse::<u8>()?;
 
-        let mut total_bits = 0;
+        let preamble = quote! {
+                let mut input = String::new();
+                input.push_str("\\begin{figure}\n");
+                input.push_str(&format!("\\begin{{bytefield}}{{{}}}\n", #bit_width));
+                input.push_str(&format!("\\bitheader{{0-{}}} \\\\\n", #bit_width - 1));
+        };
+
+        // body
+        let mut body = quote! {let mut total_bits: u8 = 0;};
+
         for field in fields {
             let ident = field
                 .ident
@@ -55,23 +65,41 @@ impl BinTexReceiver {
                 .unwrap()
                 .to_string()
                 .replace("_", "\\_");
-            let bits = field.bits.as_ref().unwrap().0.base10_parse::<u8>()?;
-            bitfields.push_str(&format!("\\bitbox{{{}}}{{{}}}", bits, ident));
-            total_bits += bits;
-            if (total_bits % bit_width) == 0 {
-                bitfields.push_str(" \\\\\n");
+
+            let field_ty = &field.ty;
+            let token_bits = if let Some(ref bits) = field.bits {
+                if let Ok(bits) = bits.0.base10_parse::<u8>() {
+                    quote! { #bits }
+                } else {
+                    unreachable!()
+                }
             } else {
-                bitfields.push_str(" & ");
-            }
+                quote! { #field_ty::BITS }
+            };
+            body = quote! {
+                #body input.push_str(&format!("\\bitbox{{{}}}{{{}}}", #token_bits, #ident));
+                total_bits += #token_bits as u8;
+                if (total_bits % #bit_width) == 0 {
+                    input.push_str(" \\\\\n");
+                } else {
+                    input.push_str(" & ");
+                }
+            };
         }
 
-        bitfields.push_str("\\end{bytefield}\n");
-        bitfields.push_str(&format!("\\caption{{{}}}\n", ident.to_string()));
-        bitfields.push_str("\\end{figure}");
+        // end
 
+        let self_ident_string = ident.to_string();
         Ok(quote! {impl BinTexOutput for #ident {
             fn latex_output() -> String {
-                #bitfields.to_string()
+                #preamble
+
+                #body
+
+                input.push_str("\\end{bytefield}\n");
+                input.push_str(&format!("\\caption{{{}}}\n", #self_ident_string));
+                input.push_str("\\end{figure}");
+                input
             }
         }})
     }
