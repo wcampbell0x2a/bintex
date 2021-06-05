@@ -21,7 +21,10 @@ struct BinTexReceiver {
     generics: syn::Generics,
     data: ast::Data<BinTexVariantReceiver, BinTexFieldReceiver>,
 
-    bit_width: Option<Num>,
+    bit_width: Num,
+
+    #[darling(default)]
+    bitheader: Option<syn::LitStr>,
 }
 
 impl BinTexReceiver {
@@ -40,19 +43,22 @@ impl BinTexReceiver {
 
         let fields = self.data.as_ref().take_struct().unwrap();
 
-        // preamble
-        let bit_width = self
-            .bit_width
-            .as_ref()
-            .expect("required bit_width attribute not found")
-            .0
-            .base10_parse::<u8>()?;
+        // parse required bit_with
+        let bit_width = self.bit_width.0.base10_parse::<u8>()?;
 
+        // either use 0-bitwidth - 1, or user defined string
+        let bitheader = if let Some(bitheader) = self.bitheader.as_ref() {
+            bitheader.value()
+        } else {
+            format!("0-{}", bit_width - 1)
+        };
+
+        // preamble
         let preamble = quote! {
                 let mut input = String::new();
                 input.push_str("\\begin{figure}\n");
                 input.push_str(&format!("\\begin{{bytefield}}{{{}}}\n", #bit_width));
-                input.push_str(&format!("\\bitheader{{0-{}}} \\\\\n", #bit_width - 1));
+                input.push_str(&format!("\\bitheader{{{}}} \\\\\n", #bitheader));
         };
 
         // body
