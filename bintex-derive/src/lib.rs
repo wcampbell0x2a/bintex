@@ -1,6 +1,7 @@
 use darling::{ast, FromDeriveInput, FromField, FromMeta, FromVariant, ToTokens};
 use proc_macro2::TokenStream;
 use quote::quote;
+
 #[proc_macro_derive(BinTex, attributes(bintex, deku))]
 pub fn proc_bintex(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
     let input: syn::DeriveInput = syn::parse_macro_input!(input);
@@ -65,12 +66,20 @@ impl BinTexReceiver {
         let mut body = quote! {let mut total_bits: u8 = 0;};
 
         for field in fields {
-            let ident = field
-                .ident
-                .as_ref()
-                .unwrap()
-                .to_string()
-                .replace("_", "\\_");
+            // create unused and ident (&str, String)
+            let (unused, ident) = if field.unused.is_some() {
+                ("[bgcolor=lightgray]", "".to_string())
+            } else {
+                (
+                    "",
+                    field
+                        .ident
+                        .as_ref()
+                        .unwrap()
+                        .to_string()
+                        .replace("_", "\\_"),
+                )
+            };
 
             let field_ty = &field.ty;
             let token_bits = if let Some(ref bits) = field.bits {
@@ -83,7 +92,10 @@ impl BinTexReceiver {
                 quote! { #field_ty::BITS }
             };
             body = quote! {
-                #body input.push_str(&format!("\\bitbox{{{}}}{{{}}}", #token_bits, #ident));
+                #body
+
+                input.push_str(&format!("\\bitbox{{{}}}{}{{{}}}", #token_bits, #unused, #ident));
+
                 total_bits += #token_bits as u8;
                 if (total_bits % #bit_width) == 0 {
                     input.push_str(" \\\\\n");
@@ -121,7 +133,7 @@ struct BinTexVariantReceiver {
 
 /// Receiver for the field-level attributes inside a struct/enum variant
 #[derive(Debug, FromField)]
-#[darling(attributes(deku))]
+#[darling(attributes(deku, bintex))]
 struct BinTexFieldReceiver {
     ident: Option<syn::Ident>,
     ty: syn::Type,
@@ -129,6 +141,10 @@ struct BinTexFieldReceiver {
     /// field bit size
     #[darling(default)]
     bits: Option<Num>,
+
+    /// Use lightgray background color and suppress field name
+    #[darling(default)]
+    unused: Option<()>,
 }
 
 #[derive(Debug)]
