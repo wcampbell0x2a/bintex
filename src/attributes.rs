@@ -38,4 +38,45 @@ struct Testing {
     c: u8,
 }
 ```
+
+
+# List of attributes
+
+|     Attribute           | Scope     |   Library   | Description
+|-------------------------|-----------|-------------|--------------------------------------------------
+| [bits](#bits)           | field     | deku/bintex | Set the bit-size of the field
+| [unused](#unused)       | field     | bintex      | Set background color to gray, supress field ident
+| [bit_width](#bit_width) | top-level | bintex      | Set width of bits in LaTeX bytefield
+| [bitheader](#bitheader) | top-level | bintex      | Set bitheader for LaTeX bytefield
+
+# bits
+
+See [deku::bits](https://docs.rs/deku/0.12.1/deku/attributes/index.html#bits)
+
+# unused
+
+Set background color to gray and remove the field name from the LaTeX output.
+
+Example:
+```rust
+use deku::prelude::*;
+use bintex::prelude::*;
+
+#[allow(dead_code)]
+#[derive(BinTex, DekuRead, DekuWrite)]
+#[bintex(bit_width = "32", bitheader = "0, 4, 8, 12, 16, 20, 24, 28")]
+struct UnusedStruct {
+    Tag: u8,
+    Value: u8,
+    #[bintex(unused)]
+    #[deku(bits = "4")]
+    c: u8,
+    #[deku(bits = "12")]
+    Mask: u16,
+    Key: u32,
+}
+```
+
+[example output](https://github.com/wcampbell0x2a/bintex/blob/master/media/unused.png)
+
 */
