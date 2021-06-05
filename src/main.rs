@@ -1,4 +1,4 @@
-use bintex::{BinTex, BinTexOutput};
+use bintex::prelude::*;
 use deku::prelude::*;
 use std::fs::File;
 use std::io::prelude::*;

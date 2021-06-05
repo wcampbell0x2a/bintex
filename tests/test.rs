@@ -1,6 +1,6 @@
 #[test]
 fn all_bits() {
-    use bintex::{BinTex, BinTexOutput};
+    use bintex::prelude::*;
 
     #[allow(dead_code)]
     #[derive(BinTex)]
@@ -27,7 +27,7 @@ fn all_bits() {
 
 #[test]
 fn use_bits_from_type() {
-    use bintex::{BinTex, BinTexOutput};
+    use bintex::prelude::*;
 
     #[allow(dead_code)]
     #[derive(BinTex)]
@@ -53,7 +53,7 @@ fn use_bits_from_type() {
 
 #[test]
 fn readme() {
-    use bintex::{BinTex, BinTexOutput};
+    use bintex::prelude::*;
 
     #[allow(dead_code)]
     #[derive(BinTex)]
@@ -89,7 +89,7 @@ fn readme() {
 
 #[test]
 fn bitheader() {
-    use bintex::{BinTex, BinTexOutput};
+    use bintex::prelude::*;
 
     #[allow(dead_code)]
     #[derive(BinTex)]
@@ -116,7 +116,7 @@ fn bitheader() {
 
 #[test]
 fn unused() {
-    use bintex::{BinTex, BinTexOutput};
+    use bintex::prelude::*;
 
     #[allow(dead_code)]
     #[derive(BinTex)]
