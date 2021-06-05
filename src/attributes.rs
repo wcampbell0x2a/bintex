@@ -7,7 +7,6 @@ For example, bintex only.
 ```rust
 use bintex::prelude::*;
 
-#[allow(dead_code)]
 #[derive(BinTex)]
 #[bintex(bit_width = "8", bitheader = "0, 7")]
 struct Testing {
@@ -25,7 +24,6 @@ For example, both deku and bintex:
 use deku::prelude::*;
 use bintex::prelude::*;
 
-#[allow(dead_code)]
 #[derive(BinTex, DekuRead, DekuWrite)]
 #[bintex(bit_width = "8", bitheader = "0, 7")]
 struct Testing {
@@ -62,7 +60,6 @@ Example:
 use deku::prelude::*;
 use bintex::prelude::*;
 
-#[allow(dead_code)]
 #[derive(BinTex, DekuRead, DekuWrite)]
 #[bintex(bit_width = "32", bitheader = "0, 4, 8, 12, 16, 20, 24, 28")]
 struct UnusedStruct {
@@ -79,4 +76,11 @@ struct UnusedStruct {
 
 [example output](https://github.com/wcampbell0x2a/bintex/blob/master/media/unused.png)
 
+# bit_width
+
+Set the bit_width of the total bytefield LaTeX figure.
+
+# bitheader
+
+Set a custom bitheader. Defaults to "0-(bit_width - 1)".
 */

@@ -1,3 +1,1 @@
-pub use crate::{
-    {BinTex, BinTexOutput}
-};
+pub use crate::{BinTex, BinTexOutput};

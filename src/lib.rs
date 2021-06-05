@@ -1,5 +1,5 @@
-pub mod prelude;
 pub mod attributes;
+pub mod prelude;
 
 pub use bintex_derive::*;
 
