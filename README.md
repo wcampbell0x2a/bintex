@@ -3,7 +3,12 @@
 (Work in Progress) Create LaTeX [bytefield](https://www.ctan.org/pkg/bytefield) diagrams with the
 use of rust proc-macros and the [deku](https://github.com/sharksforarms/deku) library.
 
-# Example
+# docs
+run `cargo doc --open`
+
+See `bintex::attribute` for Attribute details and examples.
+
+# example
 
 Run `>cargo run && pdflatex sample.tex` to create the following illustration from code:
 
