@@ -29,6 +29,6 @@ fn main() {
     }
 
     let mut file = File::create("TestingBytefield.tex").unwrap();
-    file.write_all(Version::latex_output().as_bytes());
-    file.write_all(Ipv6::latex_output().as_bytes());
+    file.write_all(Version::latex_output().as_bytes()).unwrap();
+    file.write_all(Ipv6::latex_output().as_bytes()).unwrap();
 }

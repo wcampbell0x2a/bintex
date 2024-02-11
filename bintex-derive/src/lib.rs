@@ -16,6 +16,7 @@ pub fn proc_bintex(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
 
 #[derive(Debug, FromDeriveInput)]
 #[darling(attributes(bintex), supports(struct_any, enum_any))]
+#[allow(unused)]
 struct BinTexReceiver {
     vis: syn::Visibility,
     ident: syn::Ident,
@@ -77,7 +78,7 @@ impl BinTexReceiver {
                         .as_ref()
                         .unwrap()
                         .to_string()
-                        .replace("_", "\\_"),
+                        .replace('_', "\\_"),
                 )
             };
 
@@ -127,6 +128,7 @@ impl BinTexReceiver {
 
 #[derive(Debug, FromVariant)]
 #[darling(attributes(deku))]
+#[allow(unused)]
 struct BinTexVariantReceiver {
     ident: syn::Ident,
     fields: ast::Fields<BinTexFieldReceiver>,
