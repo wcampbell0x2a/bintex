@@ -141,3 +141,57 @@ fn unused() {
 \end{figure}"#;
     assert_eq!(Testing::latex_output(), expected);
 }
+
+#[test]
+fn other_struct() {
+    use bintex::prelude::*;
+
+    #[allow(dead_code)]
+    #[derive(BinTex)]
+    #[bintex(bit_width = 4)]
+    struct Version {
+        #[deku(bits = "4")]
+        version: u8,
+    }
+
+    #[allow(dead_code)]
+    #[derive(BinTex)]
+    #[bintex(bit_width = 32)]
+    struct Ipv6 {
+        #[bintex(bits = "4")]
+        v: Version,
+        #[deku(bits = "6")]
+        ds: u8,
+        #[deku(bits = "2")]
+        ecn: u8,
+        #[deku(bits = "20")]
+        label: u32,
+        length: u16,
+        next_header: u8,
+        hop_limit: u8,
+        src: u32,
+        dst: u32,
+    }
+
+    let expected = r#"\begin{figure}
+\begin{bytefield}{4}
+\bitheader{0-3} \\
+\bitbox{4}{version} \\
+\end{bytefield}
+\caption{Version}
+\end{figure}\begin{figure}
+\begin{bytefield}{32}
+\bitheader{0-31} \\
+\bitbox{4}{v} & \bitbox{6}{ds} & \bitbox{2}{ecn} & \bitbox{20}{label} \\
+\bitbox{16}{length} & \bitbox{8}{next\_header} & \bitbox{8}{hop\_limit} \\
+\bitbox{32}{src} \\
+\bitbox{32}{dst} \\
+\end{bytefield}
+\caption{Ipv6}
+\end{figure}"#;
+
+    let mut file = String::new();
+    file.push_str(&Version::latex_output());
+    file.push_str(&Ipv6::latex_output());
+    assert_eq!(expected, expected);
+}

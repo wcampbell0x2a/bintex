@@ -105,10 +105,10 @@ impl BinTexReceiver {
             };
         }
 
-        // end
-
         let self_ident_string = ident.to_string();
-        Ok(quote! {impl BinTexOutput for #ident {
+        let tokens = quote! {
+        impl BinTexOutput for #ident {
+            const BITS: usize = #bit_width as usize;
             fn latex_output() -> String {
                 #preamble
 
@@ -119,7 +119,9 @@ impl BinTexReceiver {
                 input.push_str("\\end{figure}");
                 input
             }
-        }})
+        }};
+
+        Ok(tokens)
     }
 }
 
