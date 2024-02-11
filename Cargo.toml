@@ -11,6 +11,6 @@ members = [
 ]
 
 [dependencies]
-darling = "0.13.0"
+darling = "0.20.0"
 bintex_derive = { version = "^0.1.0", path = "bintex-derive"}
-deku = "0.12"
+deku = "0.16.0"
