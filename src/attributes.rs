@@ -37,7 +37,6 @@ struct Testing {
 }
 ```
 
-
 # List of attributes
 
 |     Attribute           | Scope     |   Library   | Description
