@@ -12,6 +12,6 @@ proc-macro = true
 [dependencies]
 deku = "0.16.0"
 syn = "2.0"
-darling = "0.20.0"
+darling = "0.20.6"
 proc-macro2 = "1.0"
 quote = "1.0"
