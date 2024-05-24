@@ -10,7 +10,7 @@ repository = "https://github.com/wcampbell0x2a/bintex"
 proc-macro = true
 
 [dependencies]
-deku = "0.16.0"
+deku = "0.17.0"
 syn = "2.0"
 darling = "0.20.8"
 proc-macro2 = "1.0"
